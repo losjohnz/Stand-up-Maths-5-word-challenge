@@ -638,7 +638,8 @@ int main () {
 	}
 
 	for (int i=0; i<26; i++)
-		free(listamastigada[i].ponteiro);
+		if (listamastigada[i].ponteiro)
+			free(listamastigada[i].ponteiro);
 
 	free_table(listahash);
 
