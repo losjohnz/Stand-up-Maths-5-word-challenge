@@ -1,6 +1,6 @@
 # Stand-up-Maths-5-word-challenge
 
-Yet another code taking on Parker's 5 word puzzle!
+Yet another code taking on Parker's 5 word puzzle! https://youtu.be/_-AfhLQfb6w
 
 This code requires the "words_alpha.txt" file to be present in the same directory in order to run properly. It contains all the acceptable English words for the code to work with.  
 It will generate two txt files. One with all 5-letter words (five_words.txt) and one with all 538 unique solutions (palavras_finais.txt).
