@@ -637,9 +637,10 @@ int main () {
 		nodeagora = respostafinal;
 	}
 
-	for (int i=0; i<26; i++)
+	for (int i=0; i<26; i++) {
 		if (listamastigada[i].ponteiro)
 			free(listamastigada[i].ponteiro);
+	}
 
 	free_table(listahash);
 
