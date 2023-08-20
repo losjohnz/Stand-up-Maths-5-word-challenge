@@ -4,7 +4,7 @@
 #include <windows.h>
 
 
-enum fparametro {comeco, fim, mantem, aumenta};
+enum fparametro {mantem, aumenta};
 
 // Structs ---------------------------------------------------------------------------------------------------------------------------------------------------- //
 
@@ -68,7 +68,7 @@ void set_cursor(bool visible) {
 
 // Funcao para usar a Clibrary function de quicksort -> (https://www.tutorialspoint.com/c_standard_library/c_function_qsort.htm)
 // para entender mais ainda como funciona -> https://www.geeksforgeeks.org/comparator-function-of-qsort-in-c/
-// basicalmente o papel dela � s� pegar dois valores e determinar se um menos o outro da <0, ==0 ou >0
+// basicalmente o papel dela é só pegar dois valores e determinar se um menos o outro da <0, ==0 ou >0
 // mudar int para char para o sort ser correto
 int comparefunc (const void *a, const void *b) {
 	return ( *(char*)a - *(char*)b );
@@ -220,7 +220,7 @@ int generate_binary (char *input) {
 
 // Linked list functions -------------------------------------------------------------------------------------------------------------------------------------- //
 
-int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // int para retornar valor caso n�o adicione nada
+int insere (superpointer *arraytoinput, ht_item pair) { // int para retornar valor caso não adicione nada
 
 	node *pagora, *pnovo;
 
@@ -237,22 +237,22 @@ int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // 
 	while (pagora) {
 		//DEBUGGING----------------------------------------
 		/*
-		[SOLVED] Esse trecho n�o cobre os conflitos em que um anagrama a um item entra depois de um n�o-anagrama ter entrado antes dele,
-		por exemplo: entra a, depois b, depois outro a denovo. O �ltimo a n�o vai entrar como anagrama e sim n�o-anagrama pois compara-se com b.
+		[SOLVED] Esse trecho não cobre os conflitos em que um anagrama a um item entra depois de um não-anagrama ter entrado antes dele,
+		por exemplo: entra a, depois b, depois outro a denovo. O último a não vai entrar como anagrama e sim não-anagrama pois compara-se com b.
 		resolver isso fazendo checar contra todos os itens da lista.
-		Ele "quase" garante que nenhuma string diferente gera a mesma key. "Quase" pq, denovo, ele s� compara com o �ltimo da fila antes de
+		Ele "quase" garante que nenhuma string diferente gera a mesma key. "Quase" pq, denovo, ele só compara com o último da fila antes de
 		adicionar. Se a entra, depois b, depois c com a mesma key de a, ele vai comparar com b e ver keys diferentes.
 		Resolver ambos esses problemas comparando com todos os itens da lista [/SOLVED]
-		[SOLVED] Depois tamb�m averiguar todos os casos que deram index repetidos mesmo com keys diferentes
-		Ou seja, tr�s possibilidades de conflito a averiguar: 1� - anagramas (keys iguais e nomes "iguais"), esperado e ok.
-		2� - keys iguais e nomes diferentes (redflag). Nao aconteceu, keys unicas para todos itens da pool - ok.
-		3� - keys diferentes, nomes diferentes mas mesmo index. Checar efici�ncia da hashfunction.
-		Checado e resolvido. A efici�ncia da hashtable (taxa de conflitos) � diretamente proporcional ao tamanho da mesma, portanto
+		[SOLVED] Depois também averiguar todos os casos que deram index repetidos mesmo com keys diferentes
+		Ou seja, três possibilidades de conflito a averiguar: 1ª - anagramas (keys iguais e nomes "iguais"), esperado e ok.
+		2º - keys iguais e nomes diferentes (redflag). Nao aconteceu, keys unicas para todos itens da pool - ok.
+		3º - keys diferentes, nomes diferentes mas mesmo index. Checar eficiência da hashfunction.
+		Checado e resolvido. A eficiência da hashtable (taxa de conflitos) é diretamente proporcional ao tamanho da mesma, portanto
 		aumentando-se o seu tamanho, diminui-se os conflitos (uma hashtable de tamanho proporcional a key gerada tem 0 conflitos, mas
-		muitos espa�os vazios.
+		muitos espaços vazios.
 		[/SOLVED]
-		[SOLVED] E por �ltimo remover primeiro da lista todos as palavras que tem letras repetidas dentro delas e depois a� sim remover os anagramas
-		Fazer nessa ordem pra bater os resultados com o v�deo [/SOLVED]
+		[SOLVED] E por último remover primeiro da lista todos as palavras que tem letras repetidas dentro delas e depois aí sim remover os anagramas
+		Fazer nessa ordem pra bater os resultados com o vídeo [/SOLVED]
 		*/
 		//-------------------------------------------------
 
@@ -260,15 +260,14 @@ int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // 
 		qsort(dummy2, 5, sizeof(char), comparefunc);
 
 		if (pagora->pair.key == pair.key) {
-			if (strcmp(dummy1, dummy2) != 0)	// se keys iguais E nomes diferentes (n�o anagramas)
+			if (strcmp(dummy1, dummy2) != 0)	// se keys iguais E nomes diferentes (não anagramas)
 				printf("conflito grave! key igual e item diferente %d\n", count);
-			return (1); // sen�o, ANAGRAMA (keys iguais e nome igual.... der
+			return (1); // senão, ANAGRAMA (keys iguais e nome igual.... der
 		}
 
-		else {	// keys diferentes (e obrigatoriamente(?) nomes diferentes
-
+		else 	// keys diferentes (e obrigatoriamente(?) nomes diferentes
 			conflitoflag = true;
-		}
+
 		pagora= pagora->proximo;
 	}
 
@@ -276,6 +275,7 @@ int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // 
 		count++;
 //		printf("conflito %d\n", count);
 	}
+
 
 	pnovo= (node*)malloc(sizeof(node));
 	if (!pnovo) {								// em caso de memoria insuficiente
@@ -285,8 +285,8 @@ int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // 
 
 
 	/* precisa checar denovo pois a checagem de cima coloca o pagora como NULL;
-	at� da pra deixar pagora uma casa antes de NULL (pra checagem pagora->proximo ali em baixo passar, mas da� ia precisar de if ali em cima pra
-	breakar antes do while terminar, ia precisar modificar um tanto aqui em baixo e o ganho � negleg�vel, ent�o s� deixei assim mesmo
+	até da pra deixar pagora uma casa antes de NULL (pra checagem pagora->proximo ali em baixo passar, mas daí ia precisar de if ali em cima pra
+	breakar antes do while terminar, ia precisar modificar um tanto aqui em baixo e o ganho é neglegível, então só deixei assim mesmo
 	e percorre a lista duas vezes e pronto cabou */
 	pagora= arraytoinput->phead;
 	strcpy(pair.item.palavrasorted, dummy1);
@@ -301,23 +301,16 @@ int insere (superpointer *arraytoinput, ht_item pair, fparametro condicao) { // 
 	}
 
 	else {
-		if (condicao==comeco) {					// come�o
-			pnovo->proximo= arraytoinput->phead;
-			arraytoinput->phead= pnovo;
-		}
-
-		if (condicao==fim) {					// fim
-			while (pagora->proximo)
-				pagora= pagora->proximo;
-			pagora->proximo= pnovo;
-		}
+		while (pagora->proximo)
+			pagora= pagora->proximo;
+		pagora->proximo= pnovo;
 	}
 
 	return (0);
 }
 
 
-void limpa(superpointer *input) {					// lembre-se que ela precisa do endere�o do VERDADEIRO array, ou seja, se essa funcao for chamada por outra funcao, checar se ela esta mandando o endere�o real e n�o o de c�pias
+void limpa(superpointer *input) {					// lembre-se que ela precisa do endereço do VERDADEIRO array, ou seja, se essa funcao for chamada por outra funcao, checar se ela esta mandando o endereço real e não o de cópias
 
 	node *pinicio, *pdummy;
 	pinicio= input->phead;
@@ -341,7 +334,7 @@ hashtable create_hashtable (int size) {
 
 	hashtable new_table;
 
-	// Func�o retornar� ponteiro do tipo "ponteiro para superponteiro", quantidade size e cada valor do tamanho de um superponteiro
+	// Funcão retornará ponteiro do tipo "ponteiro para superponteiro", quantidade size e cada valor do tamanho de um superponteiro
 	new_table.lista = (superpointer*)calloc(size, sizeof(superpointer));
 	new_table.size = size;
 	new_table.count = 0;
@@ -413,7 +406,7 @@ void add_ht_item (hashtable *table, char *palavra) {	// table-> (table com setas
 	strcpy(pair.item.palavra, palavra);
 	pair.key = generate_key(palavra);
 	index = generate_hash(pair.key, *table);
-	if (insere(&(table->lista[index]), pair, fim))	// retorna valor 1 caso seja anagrama
+	if (insere(&(table->lista[index]), pair))	// retorna valor 1 caso seja anagrama
 		table->count_anagramas++;
 	else
 		table->count++;
@@ -424,7 +417,7 @@ void add_ht_item (hashtable *table, char *palavra) {	// table-> (table com setas
 void free_table (hashtable table) {
 
 	for (int i=0; i<table.size; i++) {
-		if (table.lista[i].phead) 	// se n�o nulo
+		if (table.lista[i].phead) 	// se não nulo
 			limpa(&(table.lista[i]));
 
 	}
@@ -509,7 +502,7 @@ void resolve_desafio (ponteirocomcount *lista, int size, int posicaoi, int posic
 			strcpy(resposta[matchflag], chardummy);
 			bincheck -= bin1;
 
-			if (matchflag) {		// caso n�o seja a palavra principal
+			if (matchflag) {		// caso não seja a palavra principal
 				matchflag -=1;
 				return;
 			}
@@ -522,7 +515,7 @@ void resolve_desafio (ponteirocomcount *lista, int size, int posicaoi, int posic
 		}
 	}
 
-	printf ("\nEncontrado %d respostas!\n", respostacount);
+	printf ("\nEncontrado %d respostas!\nSalvo em: palavras_finais.txt\n\n", respostacount);
 	return;
 }
 
@@ -586,7 +579,7 @@ int main () {
 		letracount += checatamanho.ponteirotamanho[i];
 	}
 
-	printf("\nFRASES TOTAIS: %d\n", letracount);
+//	printf("\nFRASES TOTAIS: %d\n", letracount);
 	printf("\nCalculando...\n");
 //	printf("\033[?25l");	// remove cursor
 	set_cursor(false);
@@ -605,15 +598,14 @@ int main () {
 
 				palavracount++;
 				listamastigada[dummyint].count++;
-				dummyponteiro = dummyponteiro->proximo;				// avan�a lista encadeada at� chegar em NULL
+				dummyponteiro = dummyponteiro->proximo;				// avança lista encadeada até chegar em NULL
 			}
 		}
 	}
 
 // Resolve desafio -------------------------------------------------------------------------------------------------------------------------------------------- //
 
-//	resolve_desafio (listamastigada, listahash.count, 0, 0);
-
+	resolve_desafio (listamastigada, listahash.count, 0, 0);
 
 	nodeagora = respostafinal;
 
@@ -632,10 +624,10 @@ int main () {
 	fclose(pfileorigem);
 	fclose(pfiledestino);
 	fclose(pfilefinal);
-	printf("numero total de palavras analisadas = %d", ptotalcount);
-	printf("\n\napenas palavras com 5 letras = %d", listahash.count_anagramas + listahash.count_letrasrepetidas + listahash.count);
-	printf("\n\nremovendo palavras com letras repetidas = %d", listahash.count_anagramas + listahash.count);
-	printf("\n\nremovendo anagramas = %d", listahash.count);
+	printf("Numero total de palavras analisadas = %d", ptotalcount);
+	printf("\n\nApenas palavras com 5 letras = %d", listahash.count_anagramas + listahash.count_letrasrepetidas + listahash.count);
+	printf("\n\nRemovendo palavras com letras repetidas = %d", listahash.count_anagramas + listahash.count);
+	printf("\n\nRemovendo anagramas = %d", listahash.count);
 
 
 	nodeagora = respostafinal;
