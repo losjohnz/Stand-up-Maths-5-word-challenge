@@ -571,11 +571,11 @@ int main () {
 		listamastigada[i].count = 0;
 		if (checatamanho.ponteirotamanho[i] == 0)
 			listamastigada[i].ponteiro = NULL;
-
-		listamastigada[i].ponteiro = (value*)calloc(checatamanho.ponteirotamanho[i], sizeof(value));
+		else
+			listamastigada[i].ponteiro = (value*)calloc(checatamanho.ponteirotamanho[i], sizeof(value));
 
 //		printf("\nletra %c: %d\n", letra, checatamanho.ponteirotamanho[i]);
-		letra++;
+//		letra++;
 		letracount += checatamanho.ponteirotamanho[i];
 	}
 
